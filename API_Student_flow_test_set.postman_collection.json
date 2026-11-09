@@ -1,0 +1,3168 @@
+{
+  "info": {
+    "_postman_id": "dd1bd5bc-1002-455b-960e-9b979ec20784",
+    "name": "API_Student_flow_test_set",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3662296",
+    "_collection_link": "https://go.postman.co/collection/3662296-dd1bd5bc-1002-455b-960e-9b979ec20784?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "001 Guest is unable to signup as a student with invalid email",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@`;",
+              "pm.collectionVariables.set(\"userEmailInvalid\", userEmail);",
+              "",
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.variables.set(\"userName\", userName);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"The email field must be a valid email address\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"The email field must be a valid email address.\");",
+              "});",
+              "",
+              "pm.variables.unset(\"userEmail\");",
+              "pm.variables.unset(\"userName\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmailInvalid}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirmation\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "002 Guest is unable to signup as a student with empty name value",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.variables.set(\"userEmail\", userEmail);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"The name field is required\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"The name field is required.\");",
+              "});",
+              "",
+              "pm.variables.unset(\"userEmail\");",
+              "pm.variables.unset(\"userName\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirmation\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "003 Guest is unable to signup as a student with password shorter than 12 symbols",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.variables.set(\"userEmail\", userEmail);",
+              "",
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.variables.set(\"userName\", userName);",
+              "",
+              "let shortPassword = \"passDefault\";",
+              "pm.variables.set(\"shortPassword\", shortPassword);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"The password field must be at least 12 characters\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"The password field must be at least 12 characters.\");",
+              "});",
+              "",
+              "pm.variables.unset(\"userEmail\");",
+              "pm.variables.unset(\"userName\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{shortPassword}}\",\n  \"password_confirmation\": \"{{shortPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "004 Guest is unable to signup as a student without password",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.variables.set(\"userEmail\", userEmail);",
+              "",
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.variables.set(\"userName\", userName);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"The password field is required.\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.contain(\"The password field is required.\");",
+              "});",
+              "",
+              "pm.variables.unset(\"userEmail\");",
+              "pm.variables.unset(\"userName\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"\",\n  \"password_confirmation\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "005 Guest is unable to signup as a student when password and confirmation password not equal",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.variables.set(\"userEmail\", userEmail);",
+              "",
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.variables.set(\"userName\", userName);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"The password field confirmation does not match\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"The password field confirmation does not match.\");",
+              "});",
+              "",
+              "pm.variables.unset(\"userEmail\");",
+              "pm.variables.unset(\"userName\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirmation\": \"qwertyuiopas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "006 Guest is able to signup as a student",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.collectionVariables.set(\"userEmail\", userEmail);",
+              "",
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.collectionVariables.set(\"userName\", userName);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"User id is set\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let id = jsonData?.data?.id;",
+              "    pm.expect(id).to.be.greaterThan(0);",
+              "    pm.collectionVariables.set(\"userId\", id)",
+              "});",
+              "",
+              "pm.test(\"philosopherId is null\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let id = jsonData?.data?.philosopherId;",
+              "    pm.expect(id).to.be.null;",
+              "});",
+              "",
+              "pm.test(\"Email matches the email added as email parameter\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let emailReceived = jsonData?.data?.email;",
+              "    let email = pm.collectionVariables.get(\"userEmail\");",
+              "    pm.expect(emailReceived).to.eql(email);",
+              "});",
+              "",
+              "pm.test(\"Name matches the name added as name parameter\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let nameReceived = jsonData?.data?.name;",
+              "    let name = pm.collectionVariables.get(\"userName\");",
+              "    pm.expect(nameReceived).to.eql(name);",
+              "});",
+              "",
+              "pm.test(\"Role of the user is student\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let role = jsonData?.data?.role;",
+              "    pm.expect(role).to.eql(\"student\");",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [\"message\", \"data\"],",
+              "    properties: {",
+              "        message: {",
+              "            type: \"string\"",
+              "        },",
+              "        data: {",
+              "            type: \"object\",",
+              "            required: [",
+              "                \"id\",",
+              "                \"name\",",
+              "                \"email\",",
+              "                \"role\",",
+              "                \"philosopherId\",",
+              "                \"avatar_path\"",
+              "            ],",
+              "            properties: {",
+              "                id: {",
+              "                    type: \"integer\"",
+              "                },",
+              "                name: {",
+              "                    type: \"string\"",
+              "                },",
+              "                email: {",
+              "                    type: \"string\"",
+              "                },",
+              "                role: {",
+              "                    type: \"string\"",
+              "                },",
+              "                philosopherId: {",
+              "                    type: [\"integer\", \"null\"]",
+              "                },",
+              "                avatar_path: {",
+              "                    type: [\"string\", \"null\"]",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirmation\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/register",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "007 Student is unable to login after signup with mistake in email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test(\"Student is unable to login after signup with mistake in email\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Invalid credentials.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"w{{userEmail}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "008 Student is unable to login after signup with wrong password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test(\"Student is unable to login after signup with wrong password\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Invalid credentials.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"wrongPassword!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "009 Student is able to login after signup and obtain the access token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Access token received\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let access_token = jsonData?.access_token",
+              "    pm.expect(jsonData.access_token).to.exist;",
+              "    pm.collectionVariables.set(\"access_token\", access_token)",
+              "});",
+              "",
+              "pm.test(\"Email matches\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let emailReceived = jsonData?.user?.email;",
+              "    let email = pm.collectionVariables.get(\"userEmail\");",
+              "    pm.expect(emailReceived).to.eql(email);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [",
+              "        \"token_type\",",
+              "        \"access_token\",",
+              "        \"expires_at\",",
+              "        \"user\"",
+              "    ],",
+              "    properties: {",
+              "        token_type: {",
+              "            type: \"string\"",
+              "        },",
+              "        access_token: {",
+              "            type: \"string\"",
+              "        },",
+              "        expires_at: {",
+              "            type: \"string\",",
+              "            format: \"date-time\"",
+              "        },",
+              "        user: {",
+              "            type: \"object\",",
+              "            required: [",
+              "                \"id\",",
+              "                \"name\",",
+              "                \"email\",",
+              "                \"role\",",
+              "                \"philosopherId\",",
+              "                \"avatar_path\"",
+              "            ],",
+              "            properties: {",
+              "                id: {",
+              "                    type: \"integer\"",
+              "                },",
+              "                name: {",
+              "                    type: \"string\"",
+              "                },",
+              "                email: {",
+              "                    type: \"string\"",
+              "                },",
+              "                role: {",
+              "                    type: \"string\"",
+              "                },",
+              "                philosopherId: {",
+              "                    type: [\"integer\", \"null\"]",
+              "                },",
+              "                avatar_path: {",
+              "                    type: [\"string\", \"null\"]",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "010 Users email, name and role match the expected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Users roles is 'student'\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let role = jsonData?.data?.role;",
+              "    pm.expect(role).to.eql(\"student\");",
+              "});",
+              "",
+              "let email = pm.collectionVariables.get(\"userEmail\");",
+              "pm.test(`Settings: email matches '${email}'`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    let emailReceived = jsonData?.data?.email;",
+              "    pm.expect(emailReceived).to.eql(email);",
+              "});",
+              "",
+              "let name = pm.collectionVariables.get(\"userName\")",
+              "pm.test(`Users name matches \"${name}\"`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    let nameReceived = jsonData?.data?.name;",
+              "    pm.expect(nameReceived).to.eql(name);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [\"data\"],",
+              "    properties: {",
+              "        data: {",
+              "            type: \"object\",",
+              "            required: [",
+              "                \"id\",",
+              "                \"name\",",
+              "                \"email\",",
+              "                \"role\",",
+              "                \"philosopherId\",",
+              "                \"avatar_path\"",
+              "            ],",
+              "            properties: {",
+              "                id: {",
+              "                    type: \"integer\"",
+              "                },",
+              "                name: {",
+              "                    type: \"string\"",
+              "                },",
+              "                email: {",
+              "                    type: \"string\"",
+              "                },",
+              "                role: {",
+              "                    type: \"string\"",
+              "                },",
+              "                philosopherId: {",
+              "                    type: [\"integer\", \"null\"]",
+              "                },",
+              "                avatar_path: {",
+              "                    type: [\"string\", \"null\"]",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/me",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "011 Student user is unable to see the list of other users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              "",
+              "pm.test(\"User with 'student' role is unable to see the list of other users\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"You do not have permission to access this resource.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/admin/users?sort=id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "admin",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "id"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "012 Student is unable to change email",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "const userEmail = `${timestamp}student@example.com`;",
+              "pm.variables.set(\"userEmailUpdated\", userEmail);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 422\", function () {",
+              "    pm.response.to.have.status(422);",
+              "});",
+              "",
+              "pm.test(\"User with 'student' role cannot update the emaail\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Email address cannot be changed.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userName}}\",\n  \"email\": \"{{userEmailUpdated}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirmation\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/account",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "013 Student can update name",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let userName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "pm.collectionVariables.set(\"userNameUpdated\", userName);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let name = pm.collectionVariables.get(\"userNameUpdated\")",
+              "pm.test(`Student name updated to: \"${name}\"`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.name).to.eql(name);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [\"data\"],",
+              "    properties: {",
+              "        data: {",
+              "            type: \"object\",",
+              "            required: [",
+              "                \"id\",",
+              "                \"name\",",
+              "                \"email\",",
+              "                \"role\",",
+              "                \"philosopherId\",",
+              "                \"avatar_path\"",
+              "            ],",
+              "            properties: {",
+              "                id: {",
+              "                    type: \"integer\"",
+              "                },",
+              "                name: {",
+              "                    type: \"string\"",
+              "                },",
+              "                email: {",
+              "                    type: \"string\"",
+              "                },",
+              "                role: {",
+              "                    type: \"string\"",
+              "                },",
+              "                philosopherId: {",
+              "                    type: [\"integer\", \"null\"]",
+              "                },",
+              "                avatar_path: {",
+              "                    type: [\"string\", \"null\"]",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userNameUpdated}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/account",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "014 Users email, name and role match the expected after update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Users roles is 'student'\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let role = jsonData?.data?.role;",
+              "    pm.expect(role).to.eql(\"student\");",
+              "});",
+              "",
+              "let email = pm.collectionVariables.get(\"userEmail\");",
+              "pm.test(`Settings: email still matches '${email}'`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    let emailReceived = jsonData?.data?.email;",
+              "    pm.expect(emailReceived).to.eql(email);",
+              "});",
+              "",
+              "let name = pm.collectionVariables.get(\"userNameUpdated\")",
+              "pm.test(`Users name matches updated name: \"${name}\"`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    let nameReceived = jsonData?.data?.name;",
+              "    pm.expect(nameReceived).to.eql(name);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/me",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "015 Student can update password without name [BUG: PP-58]",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let updatedPassword = \"updatedPassword\"",
+              "pm.collectionVariables.set(\"userNameUpdated\", updatedPassword)"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"password\": \"{{updatedPassword}}\",\n  \"password_confirmation\": \"{{updatedPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/account",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "015[BUG BYPASS] Student can update password without name",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let updatedPassword = \"updatedPassword\"",
+              "pm.collectionVariables.set(\"userNameUpdated\", updatedPassword)"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{userNameUpdated}}\",\n  \"password\": \"{{updatedPassword}}\",\n  \"password_confirmation\": \"{{updatedPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/account",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "016 Student is able to logout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/logout",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "017 Users access token is expired after logout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/me",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "018 Student is unable to login with the old password if the password was changed",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test(\"Student is unable to login with the old password if the password was changed\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Invalid credentials.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "019 Student is able to login with the updated password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Access token received\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let access_token = jsonData?.access_token",
+              "    pm.expect(jsonData.access_token).to.exist;",
+              "    pm.collectionVariables.set(\"access_token\", access_token)",
+              "});",
+              "",
+              "pm.test(\"Email matches\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    let emailReceived = jsonData?.user?.email;",
+              "    let email = pm.collectionVariables.get(\"userEmail\");",
+              "    pm.expect(emailReceived).to.eql(email);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{updatedPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "020 Student is able to access list of philosophers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [",
+              "        \"current_page\",",
+              "        \"data\",",
+              "        \"first_page_url\",",
+              "        \"from\",",
+              "        \"last_page\",",
+              "        \"last_page_url\",",
+              "        \"links\",",
+              "        \"next_page_url\",",
+              "        \"path\",",
+              "        \"per_page\",",
+              "        \"prev_page_url\",",
+              "        \"to\",",
+              "        \"total\"",
+              "    ],",
+              "    properties: {",
+              "        current_page: {",
+              "            type: \"integer\"",
+              "        },",
+              "        data: {",
+              "            type: \"array\",",
+              "            items: {",
+              "                type: \"object\",",
+              "                required: [",
+              "                    \"id\",",
+              "                    \"name\",",
+              "                    \"slug\",",
+              "                    \"short_bio\",",
+              "                    \"biography\",",
+              "                    \"image_path\",",
+              "                    \"created_at\",",
+              "                    \"updated_at\",",
+              "                    \"deleted_at\",",
+              "                    \"posts_count\",",
+              "                    \"avatar_path\",",
+              "                    \"schools\"",
+              "                ],",
+              "                properties: {",
+              "                    id: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    name: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    slug: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    short_bio: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    biography: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    image_path: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    created_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    updated_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    deleted_at: {",
+              "                        type: [\"string\", \"null\"],",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    posts_count: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    avatar_path: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    schools: {",
+              "                        type: \"array\",",
+              "                        items: {",
+              "                            type: \"object\",",
+              "                            required: [",
+              "                                \"id\",",
+              "                                \"name\",",
+              "                                \"slug\",",
+              "                                \"short_description\",",
+              "                                \"description\",",
+              "                                \"image_path\",",
+              "                                \"created_at\",",
+              "                                \"updated_at\",",
+              "                                \"deleted_at\",",
+              "                                \"pivot\"",
+              "                            ],",
+              "                            properties: {",
+              "                                id: {",
+              "                                    type: \"integer\"",
+              "                                },",
+              "                                name: {",
+              "                                    type: \"string\"",
+              "                                },",
+              "                                slug: {",
+              "                                    type: \"string\"",
+              "                                },",
+              "                                short_description: {",
+              "                                    type: [\"string\", \"null\"]",
+              "                                },",
+              "                                description: {",
+              "                                    type: [\"string\", \"null\"]",
+              "                                },",
+              "                                image_path: {",
+              "                                    type: [\"string\", \"null\"]",
+              "                                },",
+              "                                created_at: {",
+              "                                    type: \"string\",",
+              "                                    format: \"date-time\"",
+              "                                },",
+              "                                updated_at: {",
+              "                                    type: \"string\",",
+              "                                    format: \"date-time\"",
+              "                                },",
+              "                                deleted_at: {",
+              "                                    type: [\"string\", \"null\"],",
+              "                                    format: \"date-time\"",
+              "                                },",
+              "                                pivot: {",
+              "                                    type: \"object\",",
+              "                                    required: [",
+              "                                        \"philosopher_id\",",
+              "                                        \"school_id\",",
+              "                                        \"created_at\"",
+              "                                    ],",
+              "                                    properties: {",
+              "                                        philosopher_id: {",
+              "                                            type: \"integer\"",
+              "                                        },",
+              "                                        school_id: {",
+              "                                            type: \"integer\"",
+              "                                        },",
+              "                                        created_at: {",
+              "                                            type: \"string\",",
+              "                                            format: \"date-time\"",
+              "                                        }",
+              "                                    }",
+              "                                }",
+              "                            }",
+              "                        }",
+              "                    }",
+              "                }",
+              "            }",
+              "        },",
+              "        first_page_url: {",
+              "            type: \"string\"",
+              "        },",
+              "        from: {",
+              "            type: [\"integer\", \"null\"]",
+              "        },",
+              "        last_page: {",
+              "            type: \"integer\"",
+              "        },",
+              "        last_page_url: {",
+              "            type: \"string\"",
+              "        },",
+              "        links: {",
+              "            type: \"array\",",
+              "            items: {",
+              "                type: \"object\",",
+              "                required: [",
+              "                    \"url\",",
+              "                    \"label\",",
+              "                    \"page\",",
+              "                    \"active\"",
+              "                ],",
+              "                properties: {",
+              "                    url: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    label: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    page: {",
+              "                        type: [\"integer\", \"null\"]",
+              "                    },",
+              "                    active: {",
+              "                        type: \"boolean\"",
+              "                    }",
+              "                }",
+              "            }",
+              "        },",
+              "        next_page_url: {",
+              "            type: [\"string\", \"null\"]",
+              "        },",
+              "        path: {",
+              "            type: \"string\"",
+              "        },",
+              "        per_page: {",
+              "            type: \"integer\"",
+              "        },",
+              "        prev_page_url: {",
+              "            type: [\"string\", \"null\"]",
+              "        },",
+              "        to: {",
+              "            type: [\"integer\", \"null\"]",
+              "        },",
+              "        total: {",
+              "            type: \"integer\"",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Philosophers list matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});",
+              "",
+              "pm.test(\"Philosophers have IDs\", function () {",
+              "    pm.collectionVariables.set(\"philosopherIds\", JSON.stringify([]));",
+              "    const response = pm.response.json();",
+              "    const philosophers = response?.data;",
+              "    pm.expect(philosophers).to.be.an(\"array\").that.is.not.empty;",
+              "    const philosopherIds = philosophers.map(philosopher => philosopher?.id);",
+              "    pm.expect(philosopherIds.every(id => Number.isInteger(id))).to.be.true;",
+              "",
+              "    pm.collectionVariables.set(",
+              "        \"philosopherIds\",",
+              "        JSON.stringify(philosopherIds)",
+              "    );",
+              "});",
+              "",
+              "pm.test(\"Random philosopher ID and name are selected\", function () {",
+              "    const response = pm.response.json();",
+              "    const philosophers = response?.data;",
+              "    const philosopherIds = JSON.parse(",
+              "        pm.collectionVariables.get(\"philosopherIds\") || \"[]\"",
+              "    );",
+              "    pm.expect(philosophers, \"Response data should be an array\")",
+              "        .to.be.an(\"array\").that.is.not.empty;",
+              "    pm.expect(philosopherIds, \"Philosopher IDs should be available\")",
+              "        .to.be.an(\"array\").that.is.not.empty;",
+              "",
+              "    const randomIndex = Math.floor(Math.random() * philosopherIds.length);",
+              "    const philosopherId = philosopherIds[randomIndex];",
+              "",
+              "    const philosopher = philosophers.find(item => item?.id === philosopherId);",
+              "",
+              "    pm.expect(philosopher, \"Selected philosopher should exist\").to.exist;",
+              "    pm.expect(philosopher.name, \"Philosopher should have a name\")",
+              "        .to.be.a(\"string\").that.is.not.empty;",
+              "",
+              "    pm.collectionVariables.set(\"philosopherId\", philosopher.id);",
+              "    pm.collectionVariables.set(\"philosopherName\", philosopher.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/philosophers?page=1&per_page=20&sort=name",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "philosophers"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            },
+            {
+              "key": "sort",
+              "value": "name"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "021 Student can access specific philosopher",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [\"data\"],",
+              "    properties: {",
+              "        data: {",
+              "            type: \"object\",",
+              "            required: [",
+              "                \"id\",",
+              "                \"name\",",
+              "                \"slug\",",
+              "                \"short_bio\",",
+              "                \"biography\",",
+              "                \"image_path\",",
+              "                \"created_at\",",
+              "                \"updated_at\",",
+              "                \"deleted_at\",",
+              "                \"schools\"",
+              "            ],",
+              "            properties: {",
+              "                id: { type: \"integer\" },",
+              "                name: { type: \"string\" },",
+              "                slug: { type: \"string\" },",
+              "                short_bio: { type: [\"string\", \"null\"] },",
+              "                biography: { type: [\"string\", \"null\"] },",
+              "                image_path: { type: [\"string\", \"null\"] },",
+              "                created_at: { type: \"string\", format: \"date-time\" },",
+              "                updated_at: { type: \"string\", format: \"date-time\" },",
+              "                deleted_at: {",
+              "                    type: [\"string\", \"null\"],",
+              "                    format: \"date-time\"",
+              "                },",
+              "                schools: {",
+              "                    type: \"array\",",
+              "                    items: {",
+              "                        type: \"object\"",
+              "                    }",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Philosopher response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});",
+              "",
+              "let name = pm.collectionVariables.get(\"philosopherName\")",
+              "pm.test(`Philosopher name matches the name of philosopher taken in the list - ${name}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.name).to.eql(name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/philosophers/:philisopherId",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "philosophers",
+            ":philisopherId"
+          ],
+          "variable": [
+            {
+              "key": "philisopherId",
+              "value": "{{philosopherId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "022 Student is able to access list of schools",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Schools list schema is valid\", function () {",
+              "    const response = pm.response.json();",
+              "",
+              "    const schema = {",
+              "        type: \"object\",",
+              "        required: [",
+              "            \"current_page\",",
+              "            \"data\",",
+              "            \"first_page_url\",",
+              "            \"from\",",
+              "            \"last_page\",",
+              "            \"last_page_url\",",
+              "            \"links\",",
+              "            \"path\",",
+              "            \"per_page\",",
+              "            \"to\",",
+              "            \"total\"",
+              "        ],",
+              "        properties: {",
+              "            current_page: { type: \"integer\" },",
+              "            data: {",
+              "                type: \"array\",",
+              "                items: {",
+              "                    type: \"object\",",
+              "                    required: [",
+              "                        \"id\",",
+              "                        \"name\",",
+              "                        \"slug\",",
+              "                        \"short_description\",",
+              "                        \"description\",",
+              "                        \"image_path\",",
+              "                        \"created_at\",",
+              "                        \"updated_at\",",
+              "                        \"deleted_at\",",
+              "                        \"philosophers_count\",",
+              "                        \"posts_count\",",
+              "                        \"latest_post_image_path\",",
+              "                        \"philosophers\"",
+              "                    ],",
+              "                    properties: {",
+              "                        id: { type: \"integer\" },",
+              "                        name: { type: \"string\" },",
+              "                        slug: { type: \"string\" },",
+              "                        short_description: {",
+              "                            type: [\"string\", \"null\"]",
+              "                        },",
+              "                        description: {",
+              "                            type: [\"string\", \"null\"]",
+              "                        },",
+              "                        image_path: {",
+              "                            type: [\"string\", \"null\"]",
+              "                        },",
+              "                        created_at: {",
+              "                            type: \"string\",",
+              "                            format: \"date-time\"",
+              "                        },",
+              "                        updated_at: {",
+              "                            type: \"string\",",
+              "                            format: \"date-time\"",
+              "                        },",
+              "                        deleted_at: {",
+              "                            type: [\"string\", \"null\"],",
+              "                            format: \"date-time\"",
+              "                        },",
+              "                        philosophers_count: { type: \"integer\" },",
+              "                        posts_count: { type: \"integer\" },",
+              "                        latest_post_image_path: {",
+              "                            type: [\"string\", \"null\"]",
+              "                        },",
+              "                        philosophers: { type: \"array\" }",
+              "                    }",
+              "                }",
+              "            },",
+              "            first_page_url: { type: \"string\" },",
+              "            from: { type: [\"integer\", \"null\"] },",
+              "            last_page: { type: \"integer\" },",
+              "            last_page_url: { type: \"string\" },",
+              "            links: {",
+              "                type: \"array\",",
+              "                items: {",
+              "                    type: \"object\",",
+              "                    required: [\"url\", \"label\", \"active\"],",
+              "                    properties: {",
+              "                        url: { type: [\"string\", \"null\"] },",
+              "                        label: { type: \"string\" },",
+              "                        page: { type: [\"integer\", \"null\"] },",
+              "                        active: { type: \"boolean\" }",
+              "                    }",
+              "                }",
+              "            },",
+              "            next_page_url: { type: [\"string\", \"null\"] },",
+              "            path: { type: \"string\" },",
+              "            per_page: { type: \"integer\" },",
+              "            prev_page_url: { type: [\"string\", \"null\"] },",
+              "            to: { type: [\"integer\", \"null\"] },",
+              "            total: { type: \"integer\" }",
+              "        }",
+              "    };",
+              "",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Save random school ID and name\", function () {",
+              "    const response = pm.response.json();",
+              "    const schools = response.data;",
+              "    pm.expect(schools).to.be.an(\"array\").that.is.not.empty;",
+              "    const randomIndex = Math.floor(Math.random() * schools.length);",
+              "    const school = schools[randomIndex];",
+              "    pm.expect(school.id).to.be.a(\"number\");",
+              "    pm.expect(school.name).to.be.a(\"string\").that.is.not.empty;",
+              "    pm.collectionVariables.set(\"schoolId\", school.id);",
+              "    pm.collectionVariables.set(\"schoolName\", school.name);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/schools?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "schools"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "023 Student can access specific school",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let name = pm.collectionVariables.get(\"schoolName\")",
+              "pm.test(`School name matches the name of school taken in the list - ${name}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.name).to.eql(name);",
+              "});",
+              "",
+              "pm.test(\"School details schema is valid\", function () {",
+              "    const schema = {",
+              "        type: \"object\",",
+              "        required: [\"data\", \"posts\"],",
+              "        properties: {",
+              "            data: {",
+              "                type: \"object\",",
+              "                required: [",
+              "                    \"id\",",
+              "                    \"name\",",
+              "                    \"slug\",",
+              "                    \"short_description\",",
+              "                    \"description\",",
+              "                    \"image_path\",",
+              "                    \"created_at\",",
+              "                    \"updated_at\",",
+              "                    \"deleted_at\",",
+              "                    \"philosophers_count\",",
+              "                    \"is_following\"",
+              "                ],",
+              "                properties: {",
+              "                    id: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    name: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    slug: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    short_description: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    description: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    image_path: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    created_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    updated_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    deleted_at: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    philosophers_count: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    is_following: {",
+              "                        type: \"boolean\"",
+              "                    }",
+              "                }",
+              "            },",
+              "            posts: {",
+              "                type: \"object\",",
+              "                required: [",
+              "                    \"current_page\",",
+              "                    \"data\",",
+              "                    \"first_page_url\",",
+              "                    \"from\",",
+              "                    \"last_page\",",
+              "                    \"last_page_url\",",
+              "                    \"links\",",
+              "                    \"next_page_url\",",
+              "                    \"path\",",
+              "                    \"per_page\",",
+              "                    \"prev_page_url\",",
+              "                    \"to\",",
+              "                    \"total\"",
+              "                ],",
+              "                properties: {",
+              "                    current_page: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    data: {",
+              "                        type: \"array\"",
+              "                    },",
+              "                    first_page_url: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    from: {",
+              "                        type: [\"integer\", \"null\"]",
+              "                    },",
+              "                    last_page: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    last_page_url: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    links: {",
+              "                        type: \"array\",",
+              "                        items: {",
+              "                            type: \"object\",",
+              "                            required: [",
+              "                                \"url\",",
+              "                                \"label\",",
+              "                                \"page\",",
+              "                                \"active\"",
+              "                            ],",
+              "                            properties: {",
+              "                                url: {",
+              "                                    type: [\"string\", \"null\"]",
+              "                                },",
+              "                                label: {",
+              "                                    type: \"string\"",
+              "                                },",
+              "                                page: {",
+              "                                    type: [\"integer\", \"null\"]",
+              "                                },",
+              "                                active: {",
+              "                                    type: \"boolean\"",
+              "                                }",
+              "                            }",
+              "                        }",
+              "                    },",
+              "                    next_page_url: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    path: {",
+              "                        type: \"string\"",
+              "                    },",
+              "                    per_page: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    prev_page_url: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    to: {",
+              "                        type: [\"integer\", \"null\"]",
+              "                    },",
+              "                    total: {",
+              "                        type: \"integer\"",
+              "                    }",
+              "                }",
+              "            }",
+              "        }",
+              "    };",
+              "    const response = pm.response.json();",
+              "    pm.expect(response).to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/schools/:schoolID",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "schools",
+            ":schoolID"
+          ],
+          "variable": [
+            {
+              "key": "schoolID",
+              "value": "{{schoolId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "024 List of posts on Overview of the new Student is empty",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"List of posts is empty\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data).to.eql([]);",
+              "    pm.expect(jsonData?.total).to.eql(0);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/overview/posts?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "overview",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "025 New Student can see all posts published by philosophers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"List of posts is not empty\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data).to.be.an(\"array\").that.is.not.empty;",
+              "});",
+              "",
+              "const perPage = pm.collectionVariables.get(\"perPage\");",
+              "pm.test(`List of posts consists of ${perPage} entities`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.to).to.eql(perPage);",
+              "});",
+              "",
+              "let schoolsWithPosts = [];",
+              "pm.test(\"Unique school IDs of philosophers with posts are retrieved\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    schoolsWithPosts = [...new Set(jsonData.data.flatMap(post => post.philosopher.schools.map(school => school.id)))];",
+              "    pm.expect(schoolsWithPosts).to.be.an(\"array\").that.is.not.empty;",
+              "    pm.collectionVariables.set(\"schoolsWithPosts\", schoolsWithPosts);",
+              "});",
+              "",
+              "const schema = {",
+              "    type: \"object\",",
+              "    required: [\"current_page\", \"data\"],",
+              "    properties: {",
+              "        current_page: {",
+              "            type: \"integer\",",
+              "            minimum: 1",
+              "        },",
+              "        data: {",
+              "            type: \"array\",",
+              "            items: {",
+              "                type: \"object\",",
+              "                required: [",
+              "                    \"id\",",
+              "                    \"content\",",
+              "                    \"status\",",
+              "                    \"published_at\",",
+              "                    \"philosopherId\",",
+              "                    \"philosopher\"",
+              "                ],",
+              "                properties: {",
+              "                    id: { type: \"integer\" },",
+              "                    content: { type: \"string\" },",
+              "                    image_path: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    status: {",
+              "                        type: \"string\",",
+              "                        enum: [\"published\", \"draft\"]",
+              "                    },",
+              "                    published_at: {",
+              "                        type: [\"string\", \"null\"],",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    created_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    updated_at: {",
+              "                        type: \"string\",",
+              "                        format: \"date-time\"",
+              "                    },",
+              "                    deleted_at: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    image_url: {",
+              "                        type: [\"string\", \"null\"]",
+              "                    },",
+              "                    philosopherId: {",
+              "                        type: \"integer\"",
+              "                    },",
+              "                    philosopher: {",
+              "                        type: \"object\",",
+              "                        required: [",
+              "                            \"id\",",
+              "                            \"name\",",
+              "                            \"slug\",",
+              "                            \"short_bio\",",
+              "                            \"biography\",",
+              "                            \"schools\"",
+              "                        ],",
+              "                        properties: {",
+              "                            id: { type: \"integer\" },",
+              "                            name: { type: \"string\" },",
+              "                            slug: { type: \"string\" },",
+              "                            short_bio: { type: \"string\" },",
+              "                            biography: { type: \"string\" },",
+              "                            image_path: {",
+              "                                type: [\"string\", \"null\"]",
+              "                            },",
+              "                            avatar_path: {",
+              "                                type: [\"string\", \"null\"]",
+              "                            },",
+              "                            created_at: {",
+              "                                type: \"string\",",
+              "                                format: \"date-time\"",
+              "                            },",
+              "                            updated_at: {",
+              "                                type: \"string\",",
+              "                                format: \"date-time\"",
+              "                            },",
+              "                            deleted_at: {",
+              "                                type: [\"string\", \"null\"]",
+              "                            },",
+              "                            schools: {",
+              "                                type: \"array\",",
+              "                                items: {",
+              "                                    type: \"object\",",
+              "                                    required: [",
+              "                                        \"id\",",
+              "                                        \"name\",",
+              "                                        \"slug\",",
+              "                                        \"short_description\",",
+              "                                        \"description\"",
+              "                                    ],",
+              "                                    properties: {",
+              "                                        id: {",
+              "                                            type: \"integer\"",
+              "                                        },",
+              "                                        name: {",
+              "                                            type: \"string\"",
+              "                                        },",
+              "                                        slug: {",
+              "                                            type: \"string\"",
+              "                                        },",
+              "                                        short_description: {",
+              "                                            type: \"string\"",
+              "                                        },",
+              "                                        description: {",
+              "                                            type: \"string\"",
+              "                                        },",
+              "                                        image_path: {",
+              "                                            type: [\"string\", \"null\"]",
+              "                                        },",
+              "                                        created_at: {",
+              "                                            type: \"string\",",
+              "                                            format: \"date-time\"",
+              "                                        },",
+              "                                        updated_at: {",
+              "                                            type: \"string\",",
+              "                                            format: \"date-time\"",
+              "                                        },",
+              "                                        deleted_at: {",
+              "                                            type: [\"string\", \"null\"]",
+              "                                        },",
+              "                                        pivot: {",
+              "                                            type: \"object\",",
+              "                                            properties: {",
+              "                                                philosopher_id: {",
+              "                                                    type: \"integer\"",
+              "                                                },",
+              "                                                school_id: {",
+              "                                                    type: \"integer\"",
+              "                                                },",
+              "                                                created_at: {",
+              "                                                    type: \"string\",",
+              "                                                    format: \"date-time\"",
+              "                                                }",
+              "                                            }",
+              "                                        }",
+              "                                    }",
+              "                                }",
+              "                            }",
+              "                        }",
+              "                    }",
+              "                }",
+              "            }",
+              "        }",
+              "    }",
+              "};",
+              "",
+              "pm.test(\"Response matches JSON Schema\", function () {",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let perPage = 20;",
+              "pm.collectionVariables.set(\"perPage\", perPage);"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/posts?page=1&per_page={{perPage}}",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "{{perPage}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "026 Student can see posts related to the specific school",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const schoolsWithPosts = pm.collectionVariables.get(\"schoolsWithPosts\");",
+              "const randomIndex = Math.floor(Math.random() * schoolsWithPosts.length);",
+              "const schoolWithPosts = schoolsWithPosts[randomIndex];",
+              "pm.collectionVariables.set(\"schoolWithPosts\", schoolWithPosts);"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"All posts belong to the selected school\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const schoolId = Number(pm.variables.get(\"schoolWithPosts\"));",
+              "    jsonData.data.forEach(post => {",
+              "        const schoolIds = post.philosopher.schools.map(school => school.id);",
+              "        pm.expect(schoolIds, `Post ID ${post.id} does not belong to school ID ${schoolId}`).to.include(schoolId);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/posts?page=1&per_page=20&school_id={{schoolWithPosts}}",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            },
+            {
+              "key": "school_id",
+              "value": "{{schoolWithPosts}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "027 Student can follow a school",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let school = pm.collectionVariables.get(\"schoolWithPosts\")",
+              "pm.test(`Student started to follow school id=${school}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.following).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/schools/:school_id/follow",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "schools",
+            ":school_id",
+            "follow"
+          ],
+          "variable": [
+            {
+              "key": "school_id",
+              "value": "{{schoolWithPosts}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "028 Student sees posts from a followed school on the Overview page",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"All posts on Overview belong to the followed school\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const schoolId = Number(pm.variables.get(\"schoolWithPosts\"));",
+              "    pm.expect(jsonData.data).to.be.an(\"array\").that.is.not.empty;",
+              "    jsonData.data.forEach(post => {",
+              "        const schoolIds = post.philosopher.schools.map(school => school.id);",
+              "        pm.expect(schoolIds,`Post ID ${post.id} does not belong to school ID ${schoolId}`).to.include(schoolId);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/overview/posts?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "overview",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "029 Student can unfollow a school",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let school = pm.collectionVariables.get(\"schoolWithPosts\")",
+              "pm.test(`Student finished to follow school id=${school}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.following).to.eql(false);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://192.168.0.216:8000/api/v1/schools/:school_id/follow",
+          "protocol": "http",
+          "host": [
+            "192",
+            "168",
+            "0",
+            "216"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "schools",
+            ":school_id",
+            "follow"
+          ],
+          "variable": [
+            {
+              "key": "school_id",
+              "value": "{{schoolWithPosts}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "030 Student no longer sees posts from the school after unfollowing it",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"List of posts is empty\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data).to.eql([]);",
+              "    pm.expect(jsonData?.total).to.eql(0);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/overview/posts?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "overview",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "031 Student can see posts related to the specific philosopher",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let philosopherName = pm.collectionVariables.get(\"philosopherName\");",
+              "pm.test(`All filtered posts belong to the philosopher ${philosopherName}`, function () {",
+              "    const jsonData = pm.response.json();",
+              "    const philosopherId = Number(pm.variables.get(\"philosopherId\"));",
+              "    pm.expect(jsonData.data).to.be.an(\"array\").that.is.not.empty;",
+              "    jsonData.data.forEach(post => {",
+              "        pm.expect(post.philosopherId,`Post ID ${post.id} does not belong to philosopher ID ${philosopherId}`).to.eql(philosopherId);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/posts?philosopher_id={{philosopherId}}&sort=-updated_at",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "philosopher_id",
+              "value": "{{philosopherId}}"
+            },
+            {
+              "key": "sort",
+              "value": "-updated_at"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "032 Student can follow a philosopher",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let philosopher = pm.collectionVariables.get(\"philosopherName\")",
+              "pm.test(`Student started to follow ${philosopher}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.following).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/philosophers/:philosopher_id/follow",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "philosophers",
+            ":philosopher_id",
+            "follow"
+          ],
+          "variable": [
+            {
+              "key": "philosopher_id",
+              "value": "{{philosopherId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "033 Student sees posts from a followed philosopher on the Overview page",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let philosopherName = pm.collectionVariables.get(\"philosopherName\");",
+              "pm.test(`All posts on Overview belong to the philosopher ${philosopherName}`, function () {",
+              "    const jsonData = pm.response.json();",
+              "    const philosopherId = Number(pm.variables.get(\"philosopherId\"));",
+              "    pm.expect(jsonData.data).to.be.an(\"array\").that.is.not.empty;",
+              "    jsonData.data.forEach(post => {",
+              "        pm.expect(post.philosopherId,`Post ID ${post.id} does not belong to philosopher ID ${philosopherId}`).to.eql(philosopherId);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/overview/posts?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "overview",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "034 Student can unfollow a philosopher",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let philosopher = pm.collectionVariables.get(\"philosopherName\")",
+              "pm.test(`Student finished to follow ${philosopher}`, function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data?.following).to.eql(false);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/philosophers/:philosopher_id/follow",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "philosophers",
+            ":philosopher_id",
+            "follow"
+          ],
+          "variable": [
+            {
+              "key": "philosopher_id",
+              "value": "{{philosopherId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "035 Student no longer sees posts on Overview",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"List of posts is empty\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData?.data).to.eql([]);",
+              "    pm.expect(jsonData?.total).to.eql(0);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/overview/posts?page=1&per_page=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "overview",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "per_page",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "036 Student is able to delete their account",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Account deleted\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Account deleted.\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/account",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "037 Users access token is expired after account was deleted",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/auth/me",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "038 Student is unable to log in after their account has been deleted",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401\", function () {",
+              "    pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test(\"Student is unable to log in after their account has been deleted\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql(\"Invalid credentials.\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{updatedPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/auth/login",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          "pm.test(\"Response time is less than 500ms\", function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(500);",
+          "});"
+        ]
+      }
+    }
+  ]
+}
